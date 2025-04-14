@@ -53,7 +53,7 @@ class ChatResponse(BaseModel):
     response: str
     conversation_id: str
     research_data: Optional[Dict[str, Any]] = None
-    sources: Optional[List[Dict[str, str]]] = None
+    sources: Optional[List[Dict[str, Any]]] = None
 
 # In-memory cache for conversations (would use a proper database in production)
 conversation_cache = {}
@@ -83,6 +83,14 @@ async def get_openai_response(prompt: str, research_data: Optional[Dict[str, Any
         
         # Add research data if available
         if research_data:
+            # Extract sources information
+            sources_info = research_data.get('sources', [])
+            
+            # Format sources for the context
+            formatted_sources = "\n".join([f"- {source.get('title', 'Unknown')}: {source.get('url', '')}" 
+                                     + (f" - {source.get('description', '')}" if source.get('description') else "")
+                                     for source in sources_info]) if sources_info else "No sources available"
+            
             research_context = f"""
             I've gathered the following research information to help with this query:
             
@@ -91,7 +99,10 @@ async def get_openai_response(prompt: str, research_data: Optional[Dict[str, Any
             Key Findings:
             {' '.join(['- ' + finding for finding in research_data.get('key_findings', [])])}
             
-            Please incorporate this information into your response when relevant.
+            Relevant Sources:
+            {formatted_sources}
+            
+            Please incorporate this information into your response when relevant. Make sure to reference the sources when appropriate.
             """
             messages.append({"role": "system", "content": research_context})
         
@@ -152,13 +163,14 @@ async def chat(request: ChatRequest):
                 research_data = await defense_crawler.deep_research(request.prompt)
                 
                 # Extract sources if available
-                if "sources" in research_data:
-                    sources = research_data["sources"]
-                    
-                logger.info(f"Research data retrieved for prompt: {request.prompt[:50]}...")
+                sources = research_data.get("sources", [])
+                
+                logger.info(f"Research data retrieved with {len(sources)} sources for prompt: {request.prompt[:50]}...")
             except Exception as e:
                 logger.warning(f"Error retrieving research data: {e}")
                 # Continue without research data if there's an error
+                research_data = None
+                sources = []
                 
         # Generate response using OpenAI
         response_text = await get_openai_response(request.prompt, research_data)
