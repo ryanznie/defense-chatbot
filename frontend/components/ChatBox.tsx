@@ -68,18 +68,30 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages, onSendMessage, isLoading })
                   <ul className="text-sm list-disc pl-4">
                     {message.sources.map((source, index) => (
                       <li key={index}>
-                        {source.url ? (
-                          <a 
-                            href={source.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
-                          >
-                            {source.title}
-                          </a>
-                        ) : (
-                          source.title
-                        )}
+                        <div>
+                          {source.url ? (
+                            <>
+                              <a 
+                                href={source.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline font-medium"
+                              >
+                                {source.title}
+                              </a>
+                              <div className="text-xs text-gray-600 mt-1 break-words">
+                                URL: <span className="italic">{source.url}</span>
+                              </div>
+                              {source.description && (
+                                <div className="text-xs text-gray-600 mt-1">
+                                  {source.description}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            source.title
+                          )}
+                        </div>
                       </li>
                     ))}
                   </ul>

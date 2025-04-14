@@ -6,6 +6,8 @@ export interface Message {
   sources?: Array<{
     title: string;
     url?: string;
+    description?: string;
+    source?: string;
   }>;
 }
 
@@ -16,5 +18,7 @@ export interface ChatResponse {
   sources?: Array<{
     title: string;
     url?: string;
+    description?: string;
+    source?: string;
   }>;
 }
