@@ -102,12 +102,15 @@ class DefenseCrawler:
         """
         import asyncio
         logger.info(f"Starting deep research on: {query}")
+        # Guardrail: Only allow defense/government-related queries
+        if not self._is_defense_related(query):
+            logger.warning(f"Query not related to defense or government: {query}")
+            return {
+                "summary": "Sorry, I can only assist with defense or government-related research questions.",
+                "key_findings": [],
+                "sources": []
+            }
         try:
-            # If this is a simulation or placeholder, return mock data
-            if self.api_key == "your-firecrawl-api-key":
-                logger.warning("Using simulated data as no valid API key provided")
-                return self._get_mock_research_data(query)
-
             research_params = {
                 "query": query,
                 "maxDepth": 5,           # Number of research iterations
@@ -196,57 +199,7 @@ class DefenseCrawler:
             logger.error(f"Error during deep research: {e}")
             return {"error": str(e)}
 
-    
-    def _get_mock_data(self, query: str) -> List[Dict[str, Any]]:
-        """Generate mock data for simulation purposes."""
-        defense_topics = {
-            "golden dome": [
-                {
-                    "title": "Golden Dome Defense Initiative",
-                    "url": "https://example.gov/defense/golden-dome",
-                    "description": "The Golden Dome initiative represents a collaborative effort between multiple program executive officers to enhance missile defense capabilities.",
-                    "source": "Defense Department Archives"
-                },
-                {
-                    "title": "Program Executive Officers in the Golden Dome Program",
-                    "url": "https://example.gov/defense/golden-dome/officers",
-                    "description": "Information about the program executive officers responsible for various aspects of the Golden Dome effort, including Air Force, Navy and Army liaisons.",
-                    "source": "Military Technology Review"
-                }
-            ],
-            "missile defense": [
-                {
-                    "title": "Next Generation Missile Defense Systems",
-                    "url": "https://example.gov/defense/missile-systems",
-                    "description": "Analysis of current and upcoming missile defense technologies deployed across various defense departments.",
-                    "source": "Defense Industry Report"
-                }
-            ],
-            "defense budget": [
-                {
-                    "title": "FY2025 Defense Budget Allocations",
-                    "url": "https://example.gov/budget/defense/2025",
-                    "description": "Breakdown of the defense budget allocations for fiscal year 2025, including major program funding.",
-                    "source": "Congressional Budget Office"
-                }
-            ]
-        }
-        
-        # Return relevant mock data or generic results
-        for key, data in defense_topics.items():
-            if key.lower() in query.lower():
-                return data
-                
-        # Default generic response if no specific matches
-        return [
-            {
-                "title": f"Defense Analysis: {query}",
-                "url": "https://example.gov/defense/analysis",
-                "description": f"General information related to '{query}' in the defense context.",
-                "source": "Defense Information Database"
-            }
-        ]
-    
+
     def _extract_key_findings(self, analysis: str) -> List[str]:
         """Extract key findings from analysis text."""
         # Simple extraction based on numbered or bulleted lists
@@ -267,60 +220,30 @@ class DefenseCrawler:
             
         return findings
     
-    def _get_mock_research_data(self, query: str) -> Dict[str, Any]:
-        """Generate mock research data for simulation purposes."""
-        # This format matches our internal representation after Firecrawl API processing
-        # Golden Dome specific response
-        if "golden dome" in query.lower():
-            return {
-                "summary": "The Golden Dome initiative is a multi-branch defense program focused on integrated missile defense systems. It involves collaboration between Army, Navy, and Air Force program executive officers.",
-                "key_findings": [
-                    "Currently led by three program executive officers: Gen. Sarah Williams (Air Force), Adm. James Chen (Navy), and Col. Robert Garcia (Army)",
-                    "Market size estimated at $4.2 billion for FY2025, with projected growth to $6.8 billion by FY2027",
-                    "Primary mission systems include radar integration, counter-hypersonic capabilities, and satellite communications"
-                ],
-                "sources": [
-                    {
-                        "title": "Defense Department Official Reports", 
-                        "url": "https://example.gov/reports/golden-dome", 
-                        "description": "Official Department of Defense documentation about the Golden Dome initiative"
-                    },
-                    {
-                        "title": "Congressional Testimony on Defense Programs", 
-                        "url": "https://example.gov/congress/defense/testimony", 
-                        "description": "Testimony from military officials about the Golden Dome program"
-                    },
-                    {
-                        "title": "Market Analysis of Defense Programs 2025", 
-                        "url": "https://example.gov/market/defense/2025", 
-                        "description": "Financial and market projections for the Golden Dome initiative"
-                    }
-                ]
-            }
-        
-        # Generic research response
-        return {
-            "summary": f"Analysis of '{query}' indicates several relevant defense applications and programs.",
-            "key_findings": [
-                f"Related defense initiatives show increasing funding in the 2025-2026 period",
-                f"Technology applications primarily focus on {query.split()[0] if query.split() else 'technology'} integration with existing systems",
-                f"International cooperation agreements exist with NATO allies on {query} development"
-            ],
-            "sources": [
-                {
-                    "title": "Defense Technology Review", 
-                    "url": "https://example.gov/tech-review", 
-                    "description": f"Technical analysis of {query} applications in defense"
-                },
-                {
-                    "title": "Military Strategic Analysis", 
-                    "url": "https://example.gov/strategic-analysis", 
-                    "description": f"Strategic implications of {query} for military operations"
-                },
-                {
-                    "title": "International Defense Cooperation Report", 
-                    "url": "https://example.gov/international/defense", 
-                    "description": f"Overview of international collaboration on {query}"
-                }
-            ]
-        }
+
+    def _is_defense_related(self, query: str) -> bool:
+        """Return True if the query is related to defense or government topics."""
+        keywords = [
+            # Existing keywords
+            "defense", "military", "dod", "government", "program executive officer", "market size",
+            "mission system", "contract", "army", "navy", "air force", "golden dome", "homeland security",
+            "intelligence", "federal", "agency", "warfighter", "missile", "weapons", "procurement",
+            "department of defense", "usaf", "usn", "usmc", "us army", "us navy", "us air force",
+            "national guard", "veteran", "combat", "strategic", "warfighting", "defence", "counterterrorism",
+            "nato", "allies", "dhs", "congress", "senate", "military base", "military spending", "defense budget",
+            "defense technology", "defense contractor", "defense acquisition", "defense program",
+            # Expanded defense/government/security keywords
+            "darpa", "nsa", "cia", "fbi", "space force", "defense industry", "military intelligence",
+            "armed forces", "homeland", "security clearance", "clearance", "classified", "unclassified",
+            "public sector", "doe", "doj", "dos", "state department", "defense innovation", "defense logistics",
+            "military research", "military technology", "armed services", "defense policy", "defense spending",
+            "military operations", "force structure", "defense review", "joint chiefs", "combatant command",
+            "socom", "centcom", "pacom", "eucom", "africom", "northcom", "spacecom", "indopacom",
+            "defense grant", "defense r&d", "defense funding", "military contract", "military supplier",
+            "military procurement", "military training", "military exercise", "military doctrine",
+            "military readiness", "military logistics", "military support", "military alliance", "military assistance",
+            "military aid", "military deployment", "military force", "military personnel", "military veteran",
+            "military reserve", "military retiree", "military spouse", "military dependent", "military family"
+        ]
+        q = query.lower()
+        return any(kw in q for kw in keywords)
