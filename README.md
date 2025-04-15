@@ -1,6 +1,6 @@
 # Defense Analyst Chatbot
 
-A local web application that provides a specialized defense analyst chatbot capable of processing defense-related research prompts and generating detailed, insightful responses.
+A local web app that provides a specialized defense analyst chatbot capable of processing defense-related research prompts and generating detailed, insightful responses.
 
 ## Project Architecture
 
@@ -105,6 +105,9 @@ The chatbot can handle various defense-related queries, such as:
 - "What is the market size of the Golden Dome effort by mission system?"
 - "Explain the latest developments in missile defense technologies"
 - "Analyze the FY2025 defense budget allocations for cyber initiatives"
+- "What (the fuck) does Palantir do for the government?" (pls take the swear word out btw)
+
+It will not work if you ask it to do something that is not related to defense or government, such as "Where is the best ice cream in Boston?"
 
 ## Project Structure
 
