@@ -40,21 +40,7 @@ class DefenseCrawler:
             including links and sources
         """
         try:
-            # If this is a simulation or placeholder, return mock data
-            if self.api_key == "your-firecrawl-api-key":
-                logger.warning("Using simulated data as no valid API key provided")
-                mock_data = self._get_mock_data(query)
-                return {
-                    "results": mock_data,
-                    "links": [item["url"] for item in mock_data if "url" in item],
-                    "sources": [{
-                        "title": item["title"],
-                        "url": item["url"],
-                        "source": item.get("source", "Simulated Source")
-                    } for item in mock_data if "url" in item]
-                }
-            
-            # Actual implementation would use the Firecrawl API
+            # Firecrawl API
             async with httpx.AsyncClient() as client:
                 response = await client.post(
                     f"{self.base_url}/search",
