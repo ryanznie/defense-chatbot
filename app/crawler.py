@@ -21,7 +21,7 @@ class DefenseCrawler:
     def __init__(self, api_key: Optional[str] = None):
         """Initialize the crawler with API key and base URL."""
         self.api_key = api_key or config.FIRECRAWL_API_KEY
-        self.base_url = "https://api.firecrawl.dev/v1"  # Example URL, replace with actual Firecrawl API URL
+        self.base_url = "https://api.firecrawl.dev/v1"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
@@ -229,7 +229,8 @@ class DefenseCrawler:
             "military procurement", "military training", "military exercise", "military doctrine",
             "military readiness", "military logistics", "military support", "military alliance", "military assistance",
             "military aid", "military deployment", "military force", "military personnel", "military veteran",
-            "military reserve", "military retiree", "military spouse", "military dependent", "military family"
+            "military reserve", "military retiree", "military spouse", "military dependent", "military family",
+            "palantir", "anduril", 'budget'
         ]
         q = query.lower()
         return any(kw in q for kw in keywords)
