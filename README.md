@@ -123,10 +123,30 @@ defense-chatbot/
 │   ├── pages/            # Next.js pages
 │   ├── styles/           # CSS styles
 │   └── types/            # TypeScript type definitions
+├── docker-compose.yaml   # Compose file for backend & frontend
 ├── .env.example          # Example environment variables
 ├── requirements.txt      # Python dependencies
 └── README.md             # This file
 ```
+
+## Running with Docker Compose
+
+You can run both the backend (FastAPI) and frontend (Next.js) together using Docker Compose. Place your API keys in a `.env` file in the project root first.
+
+### Build and start all services
+```sh
+docker-compose up --build
+```
+- The backend will be available at http://localhost:8000
+- The frontend will be available at http://localhost:3000
+
+### Stop all services
+```sh
+docker-compose down
+```
+
+
+
 
 ## License
 
