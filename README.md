@@ -113,20 +113,26 @@ It will not work if you ask it to do something that is not related to defense or
 
 ```
 defense-chatbot/
-├── app/                  # Backend FastAPI application
+├── app/                       # Backend FastAPI application
 │   ├── __init__.py
-│   ├── config.py         # Configuration and environment variables
-│   ├── crawler.py        # Firecrawl integration
-│   └── main.py           # Main FastAPI application
-├── frontend/             # Next.js frontend
-│   ├── components/       # React components
-│   ├── pages/            # Next.js pages
-│   ├── styles/           # CSS styles
-│   └── types/            # TypeScript type definitions
-├── docker-compose.yaml   # Compose file for backend & frontend
-├── .env.example          # Example environment variables
-├── requirements.txt      # Python dependencies
-└── README.md             # This file
+│   ├── config.py              # Configuration and environment variables
+│   ├── crawler.py             # Firecrawl integration
+│   ├── main.py                # Main FastAPI application
+│   └── test_crawler.py        # Backend unit tests
+├── frontend/                  # Next.js frontend
+│   ├── components/            # React components
+│   ├── pages/                 # Next.js pages
+│   ├── styles/                # CSS styles
+│   ├── types/                 # TypeScript type definitions
+│   ├── package.json           # Frontend dependencies
+│   ├── package-lock.json      # Frontend lock file
+│   └── Dockerfile             # Frontend container config
+├── app/Dockerfile             # Backend container config
+├── docker-compose.yaml        # Compose file for backend & frontend
+├── requirements.txt           # Python dependencies
+├── .env.example               # Example environment variables
+├── .env                       # (gitignored) Actual environment variables
+└── README.md                  # This file
 ```
 
 ## Running with Docker Compose
