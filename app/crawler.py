@@ -68,10 +68,10 @@ class DefenseCrawler:
                 
         except httpx.HTTPError as e:
             logger.error(f"HTTP error during search: {e}")
-            return []
+            return {"error": str(e)}
         except Exception as e:
             logger.error(f"Error during search: {e}")
-            return []
+            return {"error": str(e)}
     
     async def deep_research(self, query: str) -> Dict[str, Any]:
         """
@@ -145,6 +145,13 @@ class DefenseCrawler:
                         timeout=30.0
                     )
                     logger.info(f"Polling job {job_id}: {poll_resp.text}")
+                    if poll_resp.status_code != 200:
+                        logger.error(f"Polling failed for job {job_id}: {poll_resp.text}")
+                        return {
+                            "summary": f"Error polling research job for '{query}'.",
+                            "key_findings": [],
+                            "sources": []
+                        }
                     poll_resp.raise_for_status()
                     poll_data = poll_resp.json()
                     if not poll_data.get("success", False):
@@ -174,7 +181,7 @@ class DefenseCrawler:
                     elapsed += poll_interval
                 logger.error(f"Polling timed out for job {job_id}")
                 return {
-                    "summary": f"Polling timed out for research on '{query}'.",
+                    "summary": f"Polling timed out for research on '{query[:100]}'.",
                     "key_findings": [],
                     "sources": []
                 }
