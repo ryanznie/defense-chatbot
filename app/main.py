@@ -4,6 +4,7 @@ Provides API endpoints for chat functionality and integrates OpenAI and Firecraw
 """
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 import logging
@@ -28,6 +29,11 @@ app = FastAPI(
     description="API for a defense research assistant chatbot that integrates with OpenAI and Firecrawl",
     version="1.0.0"
 )
+
+@app.get("/healthz", tags=["health"])
+def healthz():
+    """Health check endpoint for container orchestration and monitoring."""
+    return JSONResponse(content={"status": "ok"})
 
 # Add CORS middleware
 app.add_middleware(
