@@ -64,6 +64,16 @@ This project consists of two main components:
 
 ## Running the Application
 
+### To Run Backend and Frontend Using Docker
+
+1. From the project root, run:
+   ```bash
+   docker-compose up --build
+   ```
+   This will build and start both the backend and frontend containers.
+
+2. Access the application at http://localhost:3000
+
 ### Start the Backend Server
 
 1. From the project root, run:
