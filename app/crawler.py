@@ -145,13 +145,6 @@ class DefenseCrawler:
                         timeout=30.0
                     )
                     logger.info(f"Polling job {job_id}: {poll_resp.text}")
-                    if poll_resp.status_code != 200:
-                        logger.error(f"Polling failed for job {job_id}: {poll_resp.text}")
-                        return {
-                            "summary": f"Error polling research job for '{query}'.",
-                            "key_findings": [],
-                            "sources": []
-                        }
                     poll_resp.raise_for_status()
                     poll_data = poll_resp.json()
                     if not poll_data.get("success", False):
