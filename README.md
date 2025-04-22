@@ -64,40 +64,41 @@ This project consists of two main components:
 
 ## Running the Application
 
-### To Run Backend and Frontend Using Docker
+### Easiest: Run with Docker Compose
 
-1. From the project root, run:
-   ```bash
-   docker-compose up --build
-   ```
-   This will build and start both the backend and frontend containers.
+You can run both the backend (FastAPI) and frontend (Next.js) together using Docker Compose. Place your API keys in a `.env` file in the project root first.
 
-2. Access the application at http://localhost:3000
+**Build and start all services**
 
-### Start the Backend Server
+From the project root, run:
+```sh
+docker-compose up --build
+```
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:8000](http://localhost:8000)
 
-1. From the project root, run:
-   ```bash
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-   ```
-   The API will be available at http://localhost:8000
+**Stop all services**
+```sh
+docker-compose down
+```
 
-2. You can access the API documentation at http://localhost:8000/docs
+### Manual: Run Backend and Frontend Separately
 
-### Start the Frontend Development Server
+**Backend:**
+```bash
+cd app
+pip install -r ../requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-1. In a new terminal, navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-   The frontend will be available at http://localhost:3000
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:8000](http://localhost:8000)
 
 ## Features
 
@@ -144,25 +145,6 @@ defense-chatbot/
 ├── .env                       # (gitignored) Actual environment variables
 └── README.md                  # This file
 ```
-
-## Running with Docker Compose
-
-You can run both the backend (FastAPI) and frontend (Next.js) together using Docker Compose. Place your API keys in a `.env` file in the project root first.
-
-### Build and start all services
-```sh
-docker-compose up --build
-```
-- The backend will be available at http://localhost:8000
-- The frontend will be available at http://localhost:3000
-
-### Stop all services
-```sh
-docker-compose down
-```
-
-
-
 
 ## License
 
